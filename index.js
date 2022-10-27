@@ -7,6 +7,9 @@ const data = require('./data');
 
 const MONGODB_URI = 'mongodb://localhost:27017/recipe-app';
 
+const dataArray2 = '/data.json';
+console.log(dataArray2); 
+
 //Method 1 : Using Async Await
 
 const manageRecipes = async () => {
@@ -19,10 +22,37 @@ const manageRecipes = async () => {
     await Recipe.deleteMany();
 
     // Run your code here, after you have insured that the connection was made
+
+    const bolognese = await Recipe.create({
+      title: 'Pasta Bolognese',
+      level: 'Easy Peasy',
+      ingredients: ['Meat', 'Tomato Sauce', 'Pasta', 'Parmigiano'],
+      cuisine: 'Italian',
+      dishType: 'main_course',
+      image: 'https://media-assets.lacucinaitaliana.it/photos/61fb130ae334e788eab040b9/1:1/w_2240,c_limit/Tagliatelle-con-rag%C3%B9-alla-bolognese.jpg',
+      duration: 120,
+      creator: 'Your Nonna',
+      created: '810-10-12',
+    });
+    console.log(bolognese.title);
+
+    await Recipe.insertMany(data);
+    data.forEach(element => console.log(element.title));
+
+    let updateRecipe = await Recipe.findOneAndUpdate({ title: 'Rigatoni alla Genovese'}, { duration: 100}, { new: true });
+    console.log(updateRecipe);
+
+    let deleteRecipe = await Recipe.deleteOne({ title: 'Carrot Cake'});
+
+    console.log(deleteRecipe);
+
+    dbConnection.disconnect();
+
   } catch (error) {
     console.log(error);
   }
 };
+
 
 manageRecipes();
 
